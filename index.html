@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>फलक लेखन | Phalak Lekhan Gallery</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>फलक लेखन</h1>
+        <p class="subtitle">Phalak Lekhan - Board Writing Gallery</p>
+    </header>
+
+    <main>
+        <!-- Category Filter -->
+        <div class="filter-section">
+            <label for="category-filter">Filter by Category:</label>
+            <select id="category-filter">
+                <option value="all">All Categories</option>
+            </select>
+        </div>
+
+        <!-- Gallery Grid -->
+        <div id="gallery" class="gallery-grid"></div>
+
+        <!-- Lightbox for viewing images -->
+        <div id="lightbox" class="lightbox">
+            <div class="lightbox-content">
+                <button class="close-btn" aria-label="Close">&times;</button>
+                <button class="back-btn" aria-label="Back to Gallery">← Gallery</button>
+                <button class="nav-btn prev-btn" aria-label="Previous">&#10094;</button>
+                <img id="lightbox-img" src="" alt="">
+                <button class="nav-btn next-btn" aria-label="Next">&#10095;</button>
+            </div>
+            <div class="carousel-container">
+                <div id="carousel" class="carousel"></div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>फलक लेखन संग्रह | Phalak Lekhan Collection</p>
+        <p class="image-count">Total Images: <span id="total-count">0</span></p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
