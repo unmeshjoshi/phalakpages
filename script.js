@@ -16,6 +16,40 @@ const nextBtn = document.querySelector('.next-btn');
 const carousel = document.getElementById('carousel');
 const totalCount = document.getElementById('total-count');
 
+// URL hash management for shareable links
+function updateURL(image) {
+    if (!image) return;
+    const category = encodeURIComponent(image.category);
+    const name = encodeURIComponent(image.name);
+    const hash = `#image/${category}/${name}`;
+    history.replaceState(null, null, hash);
+}
+
+function parseImageFromHash() {
+    const hash = window.location.hash;
+    if (!hash.startsWith('#image/')) return null;
+
+    const parts = hash.substring(7).split('/');
+    if (parts.length !== 2) return null;
+
+    return {
+        category: decodeURIComponent(parts[0]),
+        name: decodeURIComponent(parts[1])
+    };
+}
+
+function findImageByIdentifier(category, name) {
+    return allImages.find(img =>
+        img.category === category && img.name === name
+    );
+}
+
+function getImageIndexInFiltered(image) {
+    return filteredImages.findIndex(img =>
+        img.category === image.category && img.name === image.name
+    );
+}
+
 // Load catalog and initialize
 async function init() {
     try {
@@ -38,6 +72,12 @@ async function init() {
 
         populateCategoryFilter();
         renderGallery(filteredImages);
+
+        // Check for direct link on page load
+        const imageData = parseImageFromHash();
+        if (imageData) {
+            handleHashChange();
+        }
     } catch (error) {
         console.error('Error loading catalog:', error);
         gallery.innerHTML = '<div class="loading">Error loading images. Please make sure images.json exists.</div>';
@@ -99,12 +139,19 @@ function openLightbox(index) {
     updateLightboxImage();
     lightbox.classList.add('active');
     document.body.style.overflow = 'hidden';
+
+    // Update URL hash for sharing
+    const currentImage = filteredImages[currentImageIndex];
+    updateURL(currentImage);
 }
 
 // Close lightbox
 function closeLightbox() {
     lightbox.classList.remove('active');
     document.body.style.overflow = 'auto';
+
+    // Clear URL hash when closing
+    history.replaceState(null, null, window.location.pathname);
 }
 
 // Update lightbox image
@@ -112,6 +159,9 @@ function updateLightboxImage() {
     const img = filteredImages[currentImageIndex];
     lightboxImg.src = img.path;
     updateCarousel();
+
+    // Update URL hash when navigating
+    updateURL(img);
 }
 
 // Populate carousel with all images
@@ -233,6 +283,69 @@ function handleSwipe() {
             prevImage();
         }
     }
+}
+
+// Handle browser back/forward and direct links via URL hash
+window.addEventListener('hashchange', handleHashChange);
+
+function handleHashChange() {
+    const imageData = parseImageFromHash();
+
+    if (!imageData) {
+        // No valid hash or hash was cleared - close lightbox if open
+        if (lightbox.classList.contains('active')) {
+            closeLightboxWithoutURLChange();
+        }
+        return;
+    }
+
+    const { category, name } = imageData;
+    const image = findImageByIdentifier(category, name);
+
+    if (!image) {
+        console.warn(`Image not found: ${category}/${name}`);
+        return;
+    }
+
+    // Check if image is in current filtered view
+    const indexInFiltered = getImageIndexInFiltered(image);
+
+    if (indexInFiltered !== -1) {
+        // Image is in current filter - open at that index
+        openLightboxWithoutURLChange(indexInFiltered);
+    } else {
+        // Image not in current filter - reset to "all" and open
+        categoryFilter.value = 'all';
+        filteredImages = [...allImages];
+        renderGallery(filteredImages);
+
+        const newIndex = getImageIndexInFiltered(image);
+        if (newIndex !== -1) {
+            openLightboxWithoutURLChange(newIndex);
+        }
+    }
+}
+
+// Helper to open lightbox without updating URL (prevents loop)
+function openLightboxWithoutURLChange(index) {
+    currentImageIndex = index;
+    populateCarousel();
+    updateLightboxImageWithoutURL();
+    lightbox.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+// Helper to close lightbox without updating URL (prevents loop)
+function closeLightboxWithoutURLChange() {
+    lightbox.classList.remove('active');
+    document.body.style.overflow = 'auto';
+}
+
+// Helper to update image without updating URL
+function updateLightboxImageWithoutURL() {
+    const img = filteredImages[currentImageIndex];
+    lightboxImg.src = img.path;
+    updateCarousel();
 }
 
 // Initialize on load
