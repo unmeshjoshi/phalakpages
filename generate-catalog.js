@@ -10,6 +10,11 @@ function getAllImages(dir, fileList = []) {
     const stat = fs.statSync(filePath);
 
     if (stat.isDirectory()) {
+      const folderName = file.toLowerCase();
+      // Skip folders starting with 'scan', or containing 'renamed' or 'test'
+      if (folderName.startsWith('scan') || folderName.includes('renamed') || folderName.includes('test')) {
+        return; // Skip this folder
+      }
       getAllImages(filePath, fileList);
     } else if (/\.(jpg|jpeg|png|gif)$/i.test(file)) {
       fileList.push(filePath);
@@ -70,11 +75,13 @@ const categoryNames = {
 };
 
 // Convert to array format
-const catalogArray = Object.keys(catalog).map(key => ({
-  category: key,
-  displayName: categoryNames[key] || key,
-  images: catalog[key].sort((a, b) => a.name.localeCompare(b.name))
-}));
+const catalogArray = Object.keys(catalog)
+  .filter(key => key !== 'Miscellaneous') // Don't show root-level images
+  .map(key => ({
+    category: key,
+    displayName: categoryNames[key] || key,
+    images: catalog[key].sort((a, b) => a.name.localeCompare(b.name))
+  }));
 
 // Sort categories
 catalogArray.sort((a, b) => a.displayName.localeCompare(b.displayName));

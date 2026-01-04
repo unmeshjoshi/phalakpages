@@ -5,8 +5,10 @@ let currentImageIndex = 0;
 let filteredImages = [];
 
 // DOM Elements
+const categoryView = document.getElementById('category-view');
+const galleryView = document.getElementById('gallery-view');
+const categoryCards = document.getElementById('category-cards');
 const gallery = document.getElementById('gallery');
-const categoryFilter = document.getElementById('category-filter');
 const lightbox = document.getElementById('lightbox');
 const lightboxImg = document.getElementById('lightbox-img');
 const closeBtn = document.querySelector('.close-btn');
@@ -15,6 +17,11 @@ const prevBtn = document.querySelector('.prev-btn');
 const nextBtn = document.querySelector('.next-btn');
 const carousel = document.getElementById('carousel');
 const totalCount = document.getElementById('total-count');
+const totalCountDisplay = document.getElementById('total-count-display');
+const totalCategories = document.getElementById('total-categories');
+const currentCategoryTitle = document.getElementById('current-category');
+const currentCount = document.getElementById('current-count');
+const backToCategoriesBtn = document.getElementById('back-to-categories');
 
 // URL hash management for shareable links
 function updateURL(image) {
@@ -69,9 +76,10 @@ async function init() {
 
         filteredImages = [...allImages];
         totalCount.textContent = allImages.length;
+        totalCountDisplay.textContent = allImages.length;
+        totalCategories.textContent = catalog.length;
 
-        populateCategoryFilter();
-        renderGallery(filteredImages);
+        renderCategoryCards();
 
         // Check for direct link on page load
         const imageData = parseImageFromHash();
@@ -84,14 +92,55 @@ async function init() {
     }
 }
 
-// Populate category filter dropdown
-function populateCategoryFilter() {
+// Render category cards
+function renderCategoryCards() {
+    categoryCards.innerHTML = '';
+
     catalog.forEach(cat => {
-        const option = document.createElement('option');
-        option.value = cat.category;
-        option.textContent = `${cat.displayName} (${cat.images.length})`;
-        categoryFilter.appendChild(option);
+        const card = document.createElement('div');
+        card.className = 'category-card';
+
+        // Use first image as preview
+        const previewImage = cat.images[0];
+
+        card.innerHTML = `
+            <img class="category-card-image" src="${previewImage.path}" alt="${cat.displayName}" loading="lazy">
+            <div class="category-card-content">
+                <h3 class="category-card-title">${cat.displayName}</h3>
+                <p class="category-card-count">${cat.images.length} images</p>
+            </div>
+        `;
+
+        card.addEventListener('click', () => openCategory(cat));
+        categoryCards.appendChild(card);
     });
+}
+
+// Open a category
+function openCategory(category) {
+    // Filter images for this category
+    filteredImages = allImages.filter(img => img.category === category.category);
+
+    // Update UI
+    currentCategoryTitle.textContent = category.displayName;
+    currentCount.textContent = filteredImages.length;
+
+    // Show gallery view, hide category view
+    categoryView.style.display = 'none';
+    galleryView.style.display = 'block';
+
+    // Render gallery
+    renderGallery(filteredImages);
+
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Back to categories
+function showCategoryView() {
+    categoryView.style.display = 'block';
+    galleryView.style.display = 'none';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // Render gallery
@@ -119,18 +168,8 @@ function renderGallery(images) {
     });
 }
 
-// Filter by category
-categoryFilter.addEventListener('change', (e) => {
-    const selectedCategory = e.target.value;
-
-    if (selectedCategory === 'all') {
-        filteredImages = [...allImages];
-    } else {
-        filteredImages = allImages.filter(img => img.category === selectedCategory);
-    }
-
-    renderGallery(filteredImages);
-});
+// Back to categories button
+backToCategoriesBtn.addEventListener('click', showCategoryView);
 
 // Open lightbox
 function openLightbox(index) {
@@ -314,14 +353,14 @@ function handleHashChange() {
         // Image is in current filter - open at that index
         openLightboxWithoutURLChange(indexInFiltered);
     } else {
-        // Image not in current filter - reset to "all" and open
-        categoryFilter.value = 'all';
-        filteredImages = [...allImages];
-        renderGallery(filteredImages);
-
-        const newIndex = getImageIndexInFiltered(image);
-        if (newIndex !== -1) {
-            openLightboxWithoutURLChange(newIndex);
+        // Image not in current filter - find its category and open
+        const imageCategory = catalog.find(cat => cat.category === image.category);
+        if (imageCategory) {
+            openCategory(imageCategory);
+            const newIndex = getImageIndexInFiltered(image);
+            if (newIndex !== -1) {
+                openLightboxWithoutURLChange(newIndex);
+            }
         }
     }
 }

@@ -2,13 +2,28 @@ import os
 import json
 from pathlib import Path
 
-# Get all image files
+# Get all image files, filtering out unwanted folders
 images = []
 phalak_dir = Path('phalakimages')
 
 for img_path in phalak_dir.rglob('*'):
     if img_path.is_file() and img_path.suffix.lower() in ['.jpg', '.jpeg', '.png', '.gif']:
-        images.append(str(img_path))
+        # Check if any parent folder should be excluded
+        path_parts = img_path.parts
+        should_skip = False
+        for part in path_parts:
+            part_lower = part.lower()
+            # Filter: starts with 'scan' or 'additional', contains 'renamed'/'test', or is just a number
+            if (part_lower.startswith('scan') or
+                part_lower.startswith('additional') or
+                'renamed' in part_lower or
+                'test' in part_lower or
+                part.isdigit()):
+                should_skip = True
+                break
+
+        if not should_skip:
+            images.append(str(img_path))
 
 # Organize by category
 catalog = {}
@@ -41,7 +56,7 @@ category_names = {
     '3': 'Collection 3',
     'dinvishesh': 'दिनविशेष (Special Days)',
     'vyakti': 'व्यक्ती (Personalities)',
-    'vaishishtya': 'वैशिष्ट्य (Distinguished)',
+    'vaishishtya': 'वैशिष्ट्यपूर्ण',
     'kodi': 'कोडी (Riddles)',
     'lalit': 'ललित (Creative)',
     'additional-dina': 'Additional - Special Days',
@@ -53,9 +68,12 @@ category_names = {
     'Miscellaneous': 'Miscellaneous'
 }
 
-# Convert to array format
+# Convert to array format, filtering out root-level images
 catalog_array = []
 for key, value in catalog.items():
+    if key == 'Miscellaneous':  # Don't show root-level images
+        continue
+
     catalog_array.append({
         'category': key,
         'displayName': category_names.get(key, key),
