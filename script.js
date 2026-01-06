@@ -23,26 +23,48 @@ const currentCategoryTitle = document.getElementById('current-category');
 const currentCount = document.getElementById('current-count');
 const backToCategoriesBtn = document.getElementById('back-to-categories');
 
-// URL hash management for shareable links
+// URL hash management for shareable links and navigation
+function updateURLForCategory(categoryId) {
+    const hash = `#category/${encodeURIComponent(categoryId)}`;
+    history.pushState(null, null, hash);
+}
+
+function updateURLForHome() {
+    history.pushState(null, null, window.location.pathname);
+}
+
 function updateURL(image) {
     if (!image) return;
     const category = encodeURIComponent(image.category);
     const name = encodeURIComponent(image.name);
     const hash = `#image/${category}/${name}`;
-    history.replaceState(null, null, hash);
+    history.pushState(null, null, hash);
 }
 
-function parseImageFromHash() {
+function parseHashRoute() {
     const hash = window.location.hash;
-    if (!hash.startsWith('#image/')) return null;
 
-    const parts = hash.substring(7).split('/');
-    if (parts.length !== 2) return null;
+    if (!hash || hash === '#') {
+        return { type: 'home' };
+    }
 
-    return {
-        category: decodeURIComponent(parts[0]),
-        name: decodeURIComponent(parts[1])
-    };
+    if (hash.startsWith('#category/')) {
+        const categoryId = decodeURIComponent(hash.substring(10));
+        return { type: 'category', categoryId };
+    }
+
+    if (hash.startsWith('#image/')) {
+        const parts = hash.substring(7).split('/');
+        if (parts.length === 2) {
+            return {
+                type: 'image',
+                category: decodeURIComponent(parts[0]),
+                name: decodeURIComponent(parts[1])
+            };
+        }
+    }
+
+    return { type: 'home' };
 }
 
 function findImageByIdentifier(category, name) {
@@ -81,11 +103,8 @@ async function init() {
 
         renderCategoryCards();
 
-        // Check for direct link on page load
-        const imageData = parseImageFromHash();
-        if (imageData) {
-            handleHashChange();
-        }
+        // Handle initial URL route
+        handleRoute();
     } catch (error) {
         console.error('Error loading catalog:', error);
         gallery.innerHTML = '<div class="loading">Error loading images. Please make sure images.json exists.</div>';
@@ -117,7 +136,7 @@ function renderCategoryCards() {
 }
 
 // Open a category
-function openCategory(category) {
+function openCategory(category, updateURL = true) {
     // Filter images for this category
     filteredImages = allImages.filter(img => img.category === category.category);
 
@@ -132,14 +151,24 @@ function openCategory(category) {
     // Render gallery
     renderGallery(filteredImages);
 
+    // Update URL
+    if (updateURL) {
+        updateURLForCategory(category.category);
+    }
+
     // Scroll to top
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // Back to categories
-function showCategoryView() {
+function showCategoryView(updateURL = true) {
     categoryView.style.display = 'block';
     galleryView.style.display = 'none';
+
+    if (updateURL) {
+        updateURLForHome();
+    }
+
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -172,16 +201,12 @@ function renderGallery(images) {
 backToCategoriesBtn.addEventListener('click', showCategoryView);
 
 // Open lightbox
-function openLightbox(index) {
+function openLightbox(index, updateURL = true) {
     currentImageIndex = index;
     populateCarousel();
-    updateLightboxImage();
+    updateLightboxImage(updateURL);
     lightbox.classList.add('active');
     document.body.style.overflow = 'hidden';
-
-    // Update URL hash for sharing
-    const currentImage = filteredImages[currentImageIndex];
-    updateURL(currentImage);
 }
 
 // Close lightbox
@@ -189,18 +214,20 @@ function closeLightbox() {
     lightbox.classList.remove('active');
     document.body.style.overflow = 'auto';
 
-    // Clear URL hash when closing
-    history.replaceState(null, null, window.location.pathname);
+    // Go back in history instead of clearing URL
+    history.back();
 }
 
 // Update lightbox image
-function updateLightboxImage() {
+function updateLightboxImage(updateURLFlag = true) {
     const img = filteredImages[currentImageIndex];
     lightboxImg.src = img.path;
     updateCarousel();
 
     // Update URL hash when navigating
-    updateURL(img);
+    if (updateURLFlag) {
+        updateURL(img);
+    }
 }
 
 // Populate carousel with all images
@@ -325,66 +352,63 @@ function handleSwipe() {
 }
 
 // Handle browser back/forward and direct links via URL hash
-window.addEventListener('hashchange', handleHashChange);
+window.addEventListener('popstate', handleRoute);
 
-function handleHashChange() {
-    const imageData = parseImageFromHash();
+function handleRoute() {
+    const route = parseHashRoute();
 
-    if (!imageData) {
-        // No valid hash or hash was cleared - close lightbox if open
-        if (lightbox.classList.contains('active')) {
-            closeLightboxWithoutURLChange();
-        }
-        return;
-    }
-
-    const { category, name } = imageData;
-    const image = findImageByIdentifier(category, name);
-
-    if (!image) {
-        console.warn(`Image not found: ${category}/${name}`);
-        return;
-    }
-
-    // Check if image is in current filtered view
-    const indexInFiltered = getImageIndexInFiltered(image);
-
-    if (indexInFiltered !== -1) {
-        // Image is in current filter - open at that index
-        openLightboxWithoutURLChange(indexInFiltered);
-    } else {
-        // Image not in current filter - find its category and open
-        const imageCategory = catalog.find(cat => cat.category === image.category);
-        if (imageCategory) {
-            openCategory(imageCategory);
-            const newIndex = getImageIndexInFiltered(image);
-            if (newIndex !== -1) {
-                openLightboxWithoutURLChange(newIndex);
+    switch (route.type) {
+        case 'home':
+            // Show category cards view
+            if (lightbox.classList.contains('active')) {
+                closeLightboxWithoutURLChange();
             }
-        }
-    }
-}
+            if (galleryView.style.display !== 'none') {
+                showCategoryView(false);
+            }
+            break;
 
-// Helper to open lightbox without updating URL (prevents loop)
-function openLightboxWithoutURLChange(index) {
-    currentImageIndex = index;
-    populateCarousel();
-    updateLightboxImageWithoutURL();
-    lightbox.classList.add('active');
-    document.body.style.overflow = 'hidden';
+        case 'category':
+            // Show gallery for this category
+            const category = catalog.find(cat => cat.category === route.categoryId);
+            if (category) {
+                if (lightbox.classList.contains('active')) {
+                    closeLightboxWithoutURLChange();
+                }
+                openCategory(category, false);
+            }
+            break;
+
+        case 'image':
+            // Show image in lightbox
+            const image = findImageByIdentifier(route.category, route.name);
+            if (!image) {
+                console.warn(`Image not found: ${route.category}/${route.name}`);
+                return;
+            }
+
+            // First, ensure we're in the right category view
+            const imageCategory = catalog.find(cat => cat.category === image.category);
+            if (imageCategory) {
+                // Check if we need to open the category first
+                if (galleryView.style.display === 'none') {
+                    openCategory(imageCategory, false);
+                }
+
+                // Then open the lightbox
+                const indexInFiltered = getImageIndexInFiltered(image);
+                if (indexInFiltered !== -1) {
+                    openLightbox(indexInFiltered, false);
+                }
+            }
+            break;
+    }
 }
 
 // Helper to close lightbox without updating URL (prevents loop)
 function closeLightboxWithoutURLChange() {
     lightbox.classList.remove('active');
     document.body.style.overflow = 'auto';
-}
-
-// Helper to update image without updating URL
-function updateLightboxImageWithoutURL() {
-    const img = filteredImages[currentImageIndex];
-    lightboxImg.src = img.path;
-    updateCarousel();
 }
 
 // Initialize on load
