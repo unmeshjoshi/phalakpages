@@ -115,7 +115,27 @@ async function init() {
 function renderCategoryCards() {
     categoryCards.innerHTML = '';
 
-    catalog.forEach(cat => {
+    // Define custom sort order
+    const categoryOrder = ['vyakti', 'dinvishesh', 'lalit', 'vaishishtya', 'kodi'];
+
+    // Sort catalog based on custom order
+    const sortedCatalog = [...catalog].sort((a, b) => {
+        const indexA = categoryOrder.indexOf(a.category);
+        const indexB = categoryOrder.indexOf(b.category);
+
+        // If both are in the order list, sort by their position
+        if (indexA !== -1 && indexB !== -1) {
+            return indexA - indexB;
+        }
+        // If only A is in the list, it comes first
+        if (indexA !== -1) return -1;
+        // If only B is in the list, it comes first
+        if (indexB !== -1) return 1;
+        // If neither is in the list, sort alphabetically
+        return a.displayName.localeCompare(b.displayName);
+    });
+
+    sortedCatalog.forEach(cat => {
         const card = document.createElement('div');
         card.className = 'category-card';
 
@@ -214,19 +234,35 @@ function closeLightbox() {
     lightbox.classList.remove('active');
     document.body.style.overflow = 'auto';
 
-    // Go back in history instead of clearing URL
-    history.back();
+    // Get the current image to find its category
+    const currentImage = filteredImages[currentImageIndex];
+    if (currentImage) {
+        // Navigate directly to the category URL
+        const categoryHash = `#category/${encodeURIComponent(currentImage.category)}`;
+        history.pushState(null, null, categoryHash);
+        // Trigger route handler won't work here, so just keep the view as is
+    }
 }
 
 // Update lightbox image
-function updateLightboxImage(updateURLFlag = true) {
+function updateLightboxImage(updateURLFlag = true, replaceState = false) {
     const img = filteredImages[currentImageIndex];
     lightboxImg.src = img.path;
     updateCarousel();
 
     // Update URL hash when navigating
     if (updateURLFlag) {
-        updateURL(img);
+        const category = encodeURIComponent(img.category);
+        const name = encodeURIComponent(img.name);
+        const hash = `#image/${category}/${name}`;
+
+        if (replaceState) {
+            // Replace current history entry instead of adding new one
+            history.replaceState(null, null, hash);
+        } else {
+            // Add new history entry
+            history.pushState(null, null, hash);
+        }
     }
 }
 
@@ -286,13 +322,13 @@ function scrollCarouselToActive() {
 // Navigate to next image
 function nextImage() {
     currentImageIndex = (currentImageIndex + 1) % filteredImages.length;
-    updateLightboxImage();
+    updateLightboxImage(true, true);
 }
 
 // Navigate to previous image
 function prevImage() {
     currentImageIndex = (currentImageIndex - 1 + filteredImages.length) % filteredImages.length;
-    updateLightboxImage();
+    updateLightboxImage(true, true);
 }
 
 // Event listeners
