@@ -1,5 +1,485 @@
 [
   {
+    "category": "additional-vaishis",
+    "displayName": "Additional - Distinguished",
+    "images": [
+      {
+        "path": "phalakimages/additional-vaishis/abhinandan.JPG",
+        "name": "abhinandan",
+        "filename": "abhinandan.JPG"
+      },
+      {
+        "path": "phalakimages/additional-vaishis/cricketers.JPG",
+        "name": "cricketers",
+        "filename": "cricketers.JPG"
+      },
+      {
+        "path": "phalakimages/additional-vaishis/danadanit-vijay.JPG",
+        "name": "danadanit-vijay",
+        "filename": "danadanit-vijay.JPG"
+      },
+      {
+        "path": "phalakimages/additional-vaishis/hi-hi-himani.JPG",
+        "name": "hi-hi-himani",
+        "filename": "hi-hi-himani.JPG"
+      },
+      {
+        "path": "phalakimages/additional-vaishis/sangha-bhavanecha-vijay.JPG",
+        "name": "sangha-bhavanecha-vijay",
+        "filename": "sangha-bhavanecha-vijay.JPG"
+      },
+      {
+        "path": "phalakimages/additional-vaishis/shaleche-zaad.JPG",
+        "name": "shaleche-zaad",
+        "filename": "shaleche-zaad.JPG"
+      },
+      {
+        "path": "phalakimages/additional-vaishis/udyache-palak.JPG",
+        "name": "udyache-palak",
+        "filename": "udyache-palak.JPG"
+      }
+    ]
+  },
+  {
+    "category": "additional-dina",
+    "displayName": "Additional - Special Days",
+    "images": [
+      {
+        "path": "phalakimages/additional-dina/bhadrapad.JPG",
+        "name": "bhadrapad",
+        "filename": "bhadrapad.JPG"
+      },
+      {
+        "path": "phalakimages/additional-dina/geeta-jayanti.JPG",
+        "name": "geeta-jayanti",
+        "filename": "geeta-jayanti.JPG"
+      },
+      {
+        "path": "phalakimages/additional-dina/hujurpagecha-hisaka.JPG",
+        "name": "hujurpagecha-hisaka",
+        "filename": "hujurpagecha-hisaka.JPG"
+      },
+      {
+        "path": "phalakimages/additional-dina/motha-ananda.JPG",
+        "name": "motha-ananda",
+        "filename": "motha-ananda.JPG"
+      },
+      {
+        "path": "phalakimages/additional-dina/pachavi.JPG",
+        "name": "pachavi",
+        "filename": "pachavi.JPG"
+      },
+      {
+        "path": "phalakimages/additional-dina/sahitya-sammelan.JPG",
+        "name": "sahitya-sammelan",
+        "filename": "sahitya-sammelan.JPG"
+      },
+      {
+        "path": "phalakimages/additional-dina/vivekananda.JPG",
+        "name": "vivekananda",
+        "filename": "vivekananda.JPG"
+      }
+    ]
+  },
+  {
+    "category": "1",
+    "displayName": "Collection 1",
+    "images": [
+      {
+        "path": "phalakimages/1/00000001.JPG",
+        "name": "00000001",
+        "filename": "00000001.JPG"
+      },
+      {
+        "path": "phalakimages/1/00000002.JPG",
+        "name": "00000002",
+        "filename": "00000002.JPG"
+      },
+      {
+        "path": "phalakimages/1/00000003.JPG",
+        "name": "00000003",
+        "filename": "00000003.JPG"
+      },
+      {
+        "path": "phalakimages/1/00000004.JPG",
+        "name": "00000004",
+        "filename": "00000004.JPG"
+      },
+      {
+        "path": "phalakimages/1/00000005.JPG",
+        "name": "00000005",
+        "filename": "00000005.JPG"
+      },
+      {
+        "path": "phalakimages/1/00000006.JPG",
+        "name": "00000006",
+        "filename": "00000006.JPG"
+      },
+      {
+        "path": "phalakimages/1/00000007.JPG",
+        "name": "00000007",
+        "filename": "00000007.JPG"
+      },
+      {
+        "path": "phalakimages/1/00000008.JPG",
+        "name": "00000008",
+        "filename": "00000008.JPG"
+      },
+      {
+        "path": "phalakimages/1/00000009.JPG",
+        "name": "00000009",
+        "filename": "00000009.JPG"
+      },
+      {
+        "path": "phalakimages/1/00000010.JPG",
+        "name": "00000010",
+        "filename": "00000010.JPG"
+      },
+      {
+        "path": "phalakimages/1/00000011.JPG",
+        "name": "00000011",
+        "filename": "00000011.JPG"
+      },
+      {
+        "path": "phalakimages/1/00000012.JPG",
+        "name": "00000012",
+        "filename": "00000012.JPG"
+      },
+      {
+        "path": "phalakimages/1/00000013.JPG",
+        "name": "00000013",
+        "filename": "00000013.JPG"
+      },
+      {
+        "path": "phalakimages/1/00000014.JPG",
+        "name": "00000014",
+        "filename": "00000014.JPG"
+      },
+      {
+        "path": "phalakimages/1/00000015.JPG",
+        "name": "00000015",
+        "filename": "00000015.JPG"
+      },
+      {
+        "path": "phalakimages/1/00000016.JPG",
+        "name": "00000016",
+        "filename": "00000016.JPG"
+      },
+      {
+        "path": "phalakimages/1/00000017.JPG",
+        "name": "00000017",
+        "filename": "00000017.JPG"
+      },
+      {
+        "path": "phalakimages/1/00000018.JPG",
+        "name": "00000018",
+        "filename": "00000018.JPG"
+      },
+      {
+        "path": "phalakimages/1/00000019.JPG",
+        "name": "00000019",
+        "filename": "00000019.JPG"
+      },
+      {
+        "path": "phalakimages/1/00000020.JPG",
+        "name": "00000020",
+        "filename": "00000020.JPG"
+      },
+      {
+        "path": "phalakimages/1/00000022.JPG",
+        "name": "00000022",
+        "filename": "00000022.JPG"
+      },
+      {
+        "path": "phalakimages/1/00000023.JPG",
+        "name": "00000023",
+        "filename": "00000023.JPG"
+      },
+      {
+        "path": "phalakimages/1/00000024.JPG",
+        "name": "00000024",
+        "filename": "00000024.JPG"
+      },
+      {
+        "path": "phalakimages/1/00000025.JPG",
+        "name": "00000025",
+        "filename": "00000025.JPG"
+      },
+      {
+        "path": "phalakimages/1/00000026.JPG",
+        "name": "00000026",
+        "filename": "00000026.JPG"
+      },
+      {
+        "path": "phalakimages/1/00000027.JPG",
+        "name": "00000027",
+        "filename": "00000027.JPG"
+      },
+      {
+        "path": "phalakimages/1/00000028.JPG",
+        "name": "00000028",
+        "filename": "00000028.JPG"
+      },
+      {
+        "path": "phalakimages/1/00000029.JPG",
+        "name": "00000029",
+        "filename": "00000029.JPG"
+      },
+      {
+        "path": "phalakimages/1/00000030.JPG",
+        "name": "00000030",
+        "filename": "00000030.JPG"
+      }
+    ]
+  },
+  {
+    "category": "2",
+    "displayName": "Collection 2",
+    "images": [
+      {
+        "path": "phalakimages/2/00000001.JPG",
+        "name": "00000001",
+        "filename": "00000001.JPG"
+      },
+      {
+        "path": "phalakimages/2/00000002.JPG",
+        "name": "00000002",
+        "filename": "00000002.JPG"
+      },
+      {
+        "path": "phalakimages/2/00000003.JPG",
+        "name": "00000003",
+        "filename": "00000003.JPG"
+      },
+      {
+        "path": "phalakimages/2/00000004.JPG",
+        "name": "00000004",
+        "filename": "00000004.JPG"
+      },
+      {
+        "path": "phalakimages/2/00000005.JPG",
+        "name": "00000005",
+        "filename": "00000005.JPG"
+      },
+      {
+        "path": "phalakimages/2/00000006.JPG",
+        "name": "00000006",
+        "filename": "00000006.JPG"
+      },
+      {
+        "path": "phalakimages/2/00000007.JPG",
+        "name": "00000007",
+        "filename": "00000007.JPG"
+      },
+      {
+        "path": "phalakimages/2/00000008.JPG",
+        "name": "00000008",
+        "filename": "00000008.JPG"
+      },
+      {
+        "path": "phalakimages/2/00000009.JPG",
+        "name": "00000009",
+        "filename": "00000009.JPG"
+      },
+      {
+        "path": "phalakimages/2/00000010.JPG",
+        "name": "00000010",
+        "filename": "00000010.JPG"
+      },
+      {
+        "path": "phalakimages/2/00000011.JPG",
+        "name": "00000011",
+        "filename": "00000011.JPG"
+      },
+      {
+        "path": "phalakimages/2/00000012.JPG",
+        "name": "00000012",
+        "filename": "00000012.JPG"
+      },
+      {
+        "path": "phalakimages/2/00000013.JPG",
+        "name": "00000013",
+        "filename": "00000013.JPG"
+      },
+      {
+        "path": "phalakimages/2/00000014.JPG",
+        "name": "00000014",
+        "filename": "00000014.JPG"
+      },
+      {
+        "path": "phalakimages/2/00000015.JPG",
+        "name": "00000015",
+        "filename": "00000015.JPG"
+      },
+      {
+        "path": "phalakimages/2/00000016.JPG",
+        "name": "00000016",
+        "filename": "00000016.JPG"
+      },
+      {
+        "path": "phalakimages/2/00000017.JPG",
+        "name": "00000017",
+        "filename": "00000017.JPG"
+      },
+      {
+        "path": "phalakimages/2/00000018.JPG",
+        "name": "00000018",
+        "filename": "00000018.JPG"
+      },
+      {
+        "path": "phalakimages/2/00000019.JPG",
+        "name": "00000019",
+        "filename": "00000019.JPG"
+      },
+      {
+        "path": "phalakimages/2/00000020.JPG",
+        "name": "00000020",
+        "filename": "00000020.JPG"
+      },
+      {
+        "path": "phalakimages/2/00000021.JPG",
+        "name": "00000021",
+        "filename": "00000021.JPG"
+      },
+      {
+        "path": "phalakimages/2/00000022.JPG",
+        "name": "00000022",
+        "filename": "00000022.JPG"
+      },
+      {
+        "path": "phalakimages/2/00000023.JPG",
+        "name": "00000023",
+        "filename": "00000023.JPG"
+      },
+      {
+        "path": "phalakimages/2/00000024.JPG",
+        "name": "00000024",
+        "filename": "00000024.JPG"
+      },
+      {
+        "path": "phalakimages/2/00000025.JPG",
+        "name": "00000025",
+        "filename": "00000025.JPG"
+      },
+      {
+        "path": "phalakimages/2/00000026.JPG",
+        "name": "00000026",
+        "filename": "00000026.JPG"
+      },
+      {
+        "path": "phalakimages/2/00000027.JPG",
+        "name": "00000027",
+        "filename": "00000027.JPG"
+      },
+      {
+        "path": "phalakimages/2/00000028.JPG",
+        "name": "00000028",
+        "filename": "00000028.JPG"
+      }
+    ]
+  },
+  {
+    "category": "3",
+    "displayName": "Collection 3",
+    "images": [
+      {
+        "path": "phalakimages/3/00000001.JPG",
+        "name": "00000001",
+        "filename": "00000001.JPG"
+      },
+      {
+        "path": "phalakimages/3/00000002.JPG",
+        "name": "00000002",
+        "filename": "00000002.JPG"
+      },
+      {
+        "path": "phalakimages/3/00000003.JPG",
+        "name": "00000003",
+        "filename": "00000003.JPG"
+      },
+      {
+        "path": "phalakimages/3/00000004.JPG",
+        "name": "00000004",
+        "filename": "00000004.JPG"
+      },
+      {
+        "path": "phalakimages/3/00000005.JPG",
+        "name": "00000005",
+        "filename": "00000005.JPG"
+      },
+      {
+        "path": "phalakimages/3/00000006.JPG",
+        "name": "00000006",
+        "filename": "00000006.JPG"
+      },
+      {
+        "path": "phalakimages/3/00000007.JPG",
+        "name": "00000007",
+        "filename": "00000007.JPG"
+      },
+      {
+        "path": "phalakimages/3/00000008.JPG",
+        "name": "00000008",
+        "filename": "00000008.JPG"
+      },
+      {
+        "path": "phalakimages/3/00000009.JPG",
+        "name": "00000009",
+        "filename": "00000009.JPG"
+      },
+      {
+        "path": "phalakimages/3/00000010.JPG",
+        "name": "00000010",
+        "filename": "00000010.JPG"
+      },
+      {
+        "path": "phalakimages/3/00000011.JPG",
+        "name": "00000011",
+        "filename": "00000011.JPG"
+      },
+      {
+        "path": "phalakimages/3/00000012.JPG",
+        "name": "00000012",
+        "filename": "00000012.JPG"
+      },
+      {
+        "path": "phalakimages/3/00000013.JPG",
+        "name": "00000013",
+        "filename": "00000013.JPG"
+      },
+      {
+        "path": "phalakimages/3/00000014.JPG",
+        "name": "00000014",
+        "filename": "00000014.JPG"
+      },
+      {
+        "path": "phalakimages/3/00000015.JPG",
+        "name": "00000015",
+        "filename": "00000015.JPG"
+      },
+      {
+        "path": "phalakimages/3/00000016.JPG",
+        "name": "00000016",
+        "filename": "00000016.JPG"
+      },
+      {
+        "path": "phalakimages/3/00000017.JPG",
+        "name": "00000017",
+        "filename": "00000017.JPG"
+      },
+      {
+        "path": "phalakimages/3/00000018.JPG",
+        "name": "00000018",
+        "filename": "00000018.JPG"
+      },
+      {
+        "path": "phalakimages/3/00000019.JPG",
+        "name": "00000019",
+        "filename": "00000019.JPG"
+      }
+    ]
+  },
+  {
     "category": "kodi",
     "displayName": "कोडी (Riddles)",
     "images": [
@@ -454,7 +934,7 @@
   },
   {
     "category": "vaishishtya",
-    "displayName": "वैशिष्ट्यपूर्ण",
+    "displayName": "वैशिष्ट्य (Distinguished)",
     "images": [
       {
         "path": "phalakimages/vaishishtya/abhinandan.JPG",
