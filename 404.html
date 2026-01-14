@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Redirecting...</title>
+    <script>
+        // Single Page Apps for GitHub Pages
+        // Stores the path and redirects to index.html for SPA routing
+
+        (function() {
+            // Store the full path the user was trying to access
+            sessionStorage.setItem('spa-redirect-path', window.location.pathname);
+
+            // Determine base path for GitHub Pages
+            // For paths like /repo-name/image/... the base is /repo-name/
+            var pathParts = window.location.pathname.split('/').filter(Boolean);
+            var basePath = '/';
+
+            // If first segment is NOT 'image' or 'category', it's the repo name
+            if (pathParts.length > 0 &&
+                pathParts[0] !== 'image' &&
+                pathParts[0] !== 'category') {
+                basePath = '/' + pathParts[0] + '/';
+            }
+
+            window.location.replace(basePath);
+        })();
+    </script>
+</head>
+<body>
+    <p>Redirecting...</p>
+</body>
+</html>

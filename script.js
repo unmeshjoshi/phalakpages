@@ -4,6 +4,29 @@ let allImages = [];
 let currentImageIndex = 0;
 let filteredImages = [];
 
+// Detect base path for GitHub Pages deployment
+function getBasePath() {
+    // Check if there's a base tag
+    const baseTag = document.querySelector('base');
+    if (baseTag) {
+        return baseTag.getAttribute('href') || '/';
+    }
+
+    // For GitHub Pages, detect from current URL
+    const path = window.location.pathname;
+    const segments = path.split('/').filter(Boolean);
+
+    // If we're on a path like /repo-name/ or /repo-name/image/...
+    // the first segment that's NOT 'image' or 'category' is the base
+    if (segments.length > 0 && segments[0] !== 'image' && segments[0] !== 'category') {
+        return '/' + segments[0] + '/';
+    }
+
+    return '/';
+}
+
+const BASE_PATH = getBasePath();
+
 // DOM Elements
 const categoryView = document.getElementById('category-view');
 const galleryView = document.getElementById('gallery-view');
@@ -23,45 +46,69 @@ const currentCategoryTitle = document.getElementById('current-category');
 const currentCount = document.getElementById('current-count');
 const backToCategoriesBtn = document.getElementById('back-to-categories');
 
-// URL hash management for shareable links and navigation
+// URL path management for shareable links and navigation
 function updateURLForCategory(categoryId) {
-    const hash = `#category/${encodeURIComponent(categoryId)}`;
-    history.pushState(null, null, hash);
+    const path = `${BASE_PATH}category/${encodeURIComponent(categoryId)}`;
+    history.pushState({ type: 'category', categoryId }, '', path);
 }
 
 function updateURLForHome() {
-    history.pushState(null, null, window.location.pathname);
+    history.pushState({ type: 'home' }, '', BASE_PATH);
 }
 
 function updateURL(image) {
     if (!image) return;
     const category = encodeURIComponent(image.category);
     const name = encodeURIComponent(image.name);
-    const hash = `#image/${category}/${name}`;
-    history.pushState(null, null, hash);
+    const path = `${BASE_PATH}image/${category}/${name}`;
+    history.pushState({ type: 'image', category: image.category, name: image.name }, '', path);
 }
 
-function parseHashRoute() {
-    const hash = window.location.hash;
+function parseRoute() {
+    // Check for redirect path from 404.html
+    const redirectPath = sessionStorage.getItem('spa-redirect-path');
+    if (redirectPath) {
+        sessionStorage.removeItem('spa-redirect-path');
+        return parsePathRoute(redirectPath);
+    }
 
-    if (!hash || hash === '#') {
+    return parsePathRoute(window.location.pathname);
+}
+
+function parsePathRoute(pathname) {
+    // Remove base path to get the route
+    let route = pathname;
+    if (BASE_PATH !== '/' && route.startsWith(BASE_PATH)) {
+        route = route.substring(BASE_PATH.length - 1); // Keep leading /
+    }
+
+    // Ensure route starts with /
+    if (!route.startsWith('/')) {
+        route = '/' + route;
+    }
+
+    // Home route
+    if (route === '/' || route === '') {
         return { type: 'home' };
     }
 
-    if (hash.startsWith('#category/')) {
-        const categoryId = decodeURIComponent(hash.substring(10));
-        return { type: 'category', categoryId };
+    // Category route: /category/{categoryId}
+    const categoryMatch = route.match(/^\/category\/([^/]+)\/?$/);
+    if (categoryMatch) {
+        return {
+            type: 'category',
+            categoryId: decodeURIComponent(categoryMatch[1])
+        };
     }
 
-    if (hash.startsWith('#image/')) {
-        const parts = hash.substring(7).split('/');
-        if (parts.length === 2) {
-            return {
-                type: 'image',
-                category: decodeURIComponent(parts[0]),
-                name: decodeURIComponent(parts[1])
-            };
-        }
+    // Image route: /image/{category}/{name}
+    const imageMatch = route.match(/^\/image\/([^/]+)\/([^/]+)\/?$/);
+    if (imageMatch) {
+        return {
+            type: 'image',
+            category: decodeURIComponent(imageMatch[1]),
+            name: decodeURIComponent(imageMatch[2])
+        };
     }
 
     return { type: 'home' };
@@ -82,8 +129,17 @@ function getImageIndexInFiltered(image) {
 // Load catalog and initialize
 async function init() {
     try {
-        const response = await fetch('images.json');
+        const response = await fetch(BASE_PATH + 'images.json');
         catalog = await response.json();
+
+        // Make image paths absolute (prepend BASE_PATH)
+        catalog.forEach(cat => {
+            cat.images.forEach(img => {
+                if (!img.path.startsWith('/') && !img.path.startsWith('http')) {
+                    img.path = BASE_PATH + img.path;
+                }
+            });
+        });
 
         // Flatten all images with category info
         catalog.forEach(cat => {
@@ -238,9 +294,7 @@ function closeLightbox() {
     const currentImage = filteredImages[currentImageIndex];
     if (currentImage) {
         // Navigate directly to the category URL
-        const categoryHash = `#category/${encodeURIComponent(currentImage.category)}`;
-        history.pushState(null, null, categoryHash);
-        // Trigger route handler won't work here, so just keep the view as is
+        updateURLForCategory(currentImage.category);
     }
 }
 
@@ -250,18 +304,18 @@ function updateLightboxImage(updateURLFlag = true, replaceState = false) {
     lightboxImg.src = img.path;
     updateCarousel();
 
-    // Update URL hash when navigating
+    // Update URL when navigating
     if (updateURLFlag) {
         const category = encodeURIComponent(img.category);
         const name = encodeURIComponent(img.name);
-        const hash = `#image/${category}/${name}`;
+        const path = `${BASE_PATH}image/${category}/${name}`;
 
         if (replaceState) {
             // Replace current history entry instead of adding new one
-            history.replaceState(null, null, hash);
+            history.replaceState({ type: 'image', category: img.category, name: img.name }, '', path);
         } else {
             // Add new history entry
-            history.pushState(null, null, hash);
+            history.pushState({ type: 'image', category: img.category, name: img.name }, '', path);
         }
     }
 }
@@ -387,11 +441,11 @@ function handleSwipe() {
     }
 }
 
-// Handle browser back/forward and direct links via URL hash
+// Handle browser back/forward and direct links via URL path
 window.addEventListener('popstate', handleRoute);
 
 function handleRoute() {
-    const route = parseHashRoute();
+    const route = parseRoute();
 
     switch (route.type) {
         case 'home':
